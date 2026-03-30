@@ -1,1024 +1,169 @@
 <!DOCTYPE html>
-<!-- saved from url=(0058)file:///Users/msinghal/Downloads/singulr-litellm-blog.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Singulr AI Blog | Madan Singhal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0b0f19;
+      color: #e6edf3;
+    }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>When Your Security Scanner Becomes the Weapon — LiteLLM Supply Chain Attack | Singulr AI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com/">
-<link href="./blog_litellm_files/css2" rel="stylesheet">
-<style>
-:root {
-  --navy:   #0f172a;
-  --ink:    #1e293b;
-  --body:   #374151;
-  --muted:  #6b7280;
-  --light:  #f8fafc;
-  --border: #e2e8f0;
-  --accent: #2563eb;
-  --teal:   #0891b2;
-  --red:    #dc2626;
-  --orange: #ea580c;
-  --green:  #16a34a;
-  --amber:  #d97706;
-  --white:  #ffffff;
-  --purple: #7c3aed;
-}
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Figtree', sans-serif; color: var(--ink); background: #fff; font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    header {
+      background: linear-gradient(135deg, #1f6feb, #9333ea);
+      padding: 60px 20px;
+      text-align: center;
+    }
 
-/* ── NAV ─────────────────────────────────────────────── */
-.nav {
-  position: sticky; top: 0; z-index: 100;
-  background: #fff; border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-}
-.nav-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 64px;
-}
-.nav-logo { display: flex; align-items: center; gap: .5rem; text-decoration: none; }
-.nav-logo-mark {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, #2563eb, #0891b2);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Figtree', sans-serif; font-weight: 700; font-size: .85rem; color: #fff;
-}
-.nav-logo-text { font-weight: 700; font-size: 1rem; color: var(--navy); letter-spacing: -.01em; }
-.nav-logo-text span { color: var(--accent); }
-.nav-links { display: flex; align-items: center; gap: 1.8rem; }
-.nav-links a { font-size: .88rem; font-weight: 500; color: var(--body); text-decoration: none; }
-.nav-links a:hover { color: var(--accent); }
-.nav-cta {
-  background: var(--navy); color: #fff !important;
-  padding: .5em 1.1em; border-radius: 6px; font-weight: 600 !important;
-  font-size: .82rem !important;
-}
-.nav-cta:hover { background: var(--accent) !important; color: #fff !important; }
+    header h1 {
+      margin: 0;
+      font-size: 2.8rem;
+    }
 
-/* ── ANNOUNCEMENT BANNER ──────────────────────────────── */
-.banner {
-  background: linear-gradient(90deg, #eff6ff, #e0f2fe);
-  border-bottom: 1px solid #bfdbfe;
-  padding: .65rem 2rem; text-align: center;
-  font-size: .82rem; color: var(--accent); font-weight: 500;
-}
-.banner a { color: var(--accent); font-weight: 600; text-decoration: none; }
-.banner a:hover { text-decoration: underline; }
+    header p {
+      margin-top: 10px;
+      opacity: 0.9;
+    }
 
-/* ── HERO ─────────────────────────────────────────────── */
-.hero {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f2d4a 100%);
-  color: #fff; padding: 4rem 2rem 3.5rem; position: relative; overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(37,99,235,.25) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(8,145,178,.2) 0%, transparent 50%);
-}
-.hero-grid-lines {
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
-.hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
-.hero-tag {
-  display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: #7dd3fc; margin-bottom: 1.25rem;
-}
-.hero-tag::before { content: ''; display: block; width: 24px; height: 2px; background: #7dd3fc; }
-.hero h1 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: clamp(2rem, 5vw, 3.1rem);
-  line-height: 1.18; font-weight: 400;
-  color: #fff; margin-bottom: 1.25rem;
-  letter-spacing: -.01em;
-}
-.hero h1 em { color: #7dd3fc; font-style: italic; }
-.hero-sub {
-  font-size: 1.05rem; color: rgba(255,255,255,.72);
-  max-width: 680px; line-height: 1.65; margin-bottom: 2rem;
-}
-.hero-meta { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
-.meta-item { font-size: .82rem; color: rgba(255,255,255,.55); display: flex; align-items: center; gap: .4rem; }
-.meta-item strong { color: rgba(255,255,255,.85); font-weight: 600; }
-.meta-sep { color: rgba(255,255,255,.25); }
-.hero-badges { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .75rem; }
-.hbadge {
-  font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  padding: .28em .78em; border-radius: 4px;
-}
-.hbadge-red { background: rgba(220,38,38,.2); color: #fca5a5; border: 1px solid rgba(220,38,38,.3); }
-.hbadge-orange { background: rgba(234,88,12,.2); color: #fdba74; border: 1px solid rgba(234,88,12,.3); }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 15px;
+      background: #111827;
+    }
 
-/* ── LAYOUT ───────────────────────────────────────────── */
-.page { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
-.page-wide { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    nav a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-/* ── AUTHOR STRIP ─────────────────────────────────────── */
-.author-strip {
-  border-bottom: 1px solid var(--border);
-  padding: 1.5rem 2rem;
-}
-.author-strip-inner {
-  max-width: 820px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-}
-.author-info { display: flex; align-items: center; gap: .85rem; }
-.author-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #0891b2);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: .9rem; color: #fff; flex-shrink: 0;
-}
-.author-name { font-weight: 600; font-size: .9rem; color: var(--navy); }
-.author-role { font-size: .78rem; color: var(--muted); }
-.share-btn {
-  font-size: .8rem; font-weight: 600; color: var(--accent);
-  border: 1px solid var(--accent); padding: .35em .9em; border-radius: 5px;
-  text-decoration: none; display: flex; align-items: center; gap: .35rem;
-}
-.share-btn:hover { background: var(--accent); color: #fff; }
+    nav a:hover {
+      color: #ffffff;
+    }
 
-/* ── ARTICLE BODY ─────────────────────────────────────── */
-.article { padding: 3rem 2rem 4rem; }
-.article-inner { max-width: 820px; margin: 0 auto; }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+    }
 
-.article p { color: var(--body); margin-bottom: 1.3rem; font-size: 1.02rem; line-height: 1.78; }
-.article p strong { color: var(--navy); font-weight: 600; }
+    .post {
+      background: #111827;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-.article h2 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-size: 1.75rem; font-weight: 400; color: var(--navy);
-  margin: 3rem 0 1rem; line-height: 1.25; letter-spacing: -.01em;
-}
-.article h3 {
-  font-family: 'Figtree', sans-serif;
-  font-size: 1.1rem; font-weight: 700; color: var(--navy);
-  margin: 2rem 0 .7rem;
-}
-.article h4 {
-  font-family: 'Figtree', sans-serif;
-  font-size: .92rem; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .08em;
-  margin: 1.8rem 0 .6rem;
-}
+    .post:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
 
-.article ul, .article ol { padding-left: 1.5rem; margin: 1rem 0 1.3rem; }
-.article ul li, .article ol li {
-  color: var(--body); font-size: 1rem; line-height: 1.7;
-  margin-bottom: .4rem;
-}
-.article ul li::marker { color: var(--accent); }
-.article ol li::marker { color: var(--accent); font-weight: 700; }
-.article ul li strong, .article ol li strong { color: var(--navy); }
+    .post h2 {
+      margin-top: 0;
+    }
 
-/* ── INLINE CODE ────────────────────────────────────── */
-code {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .82em; background: #f1f5f9; color: var(--teal);
-  padding: .15em .4em; border-radius: 3px;
-  border: 1px solid #e2e8f0;
-}
+    .post p {
+      color: #9ca3af;
+    }
 
-/* ── STATS ROW ─────────────────────────────────────────── */
-.stats-row {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden; margin: 2rem 0;
-}
-.stat { background: #fff; padding: 1.4rem 1rem; text-align: center; }
-.stat-val { font-family: 'Instrument Serif', serif; font-size: 2.2rem; line-height: 1; display: block; margin-bottom: .2rem; }
-.stat-val.r { color: var(--red); }
-.stat-val.o { color: var(--orange); }
-.stat-val.b { color: var(--accent); }
-.stat-val.t { color: var(--teal); }
-.stat-lbl { font-size: .73rem; color: var(--muted); font-weight: 500; line-height: 1.4; }
+    .tag {
+      display: inline-block;
+      background: #1f2937;
+      padding: 5px 10px;
+      margin-right: 5px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
 
-/* ── CALLOUT BOX ──────────────────────────────────────── */
-.callout {
-  border-radius: 8px; padding: 1.4rem 1.6rem; margin: 1.8rem 0;
-  border: 1px solid;
-}
-.callout-warn  { background: #fffbeb; border-color: #fcd34d; }
-.callout-red   { background: #fef2f2; border-color: #fca5a5; }
-.callout-green { background: #f0fdf4; border-color: #86efac; }
-.callout-blue  { background: #eff6ff; border-color: #93c5fd; }
-.callout-teal  { background: #ecfeff; border-color: #67e8f9; }
-.callout-label {
-  font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; margin-bottom: .65rem; display: block;
-}
-.callout-warn  .callout-label { color: var(--amber); }
-.callout-red   .callout-label { color: var(--red); }
-.callout-green .callout-label { color: var(--green); }
-.callout-blue  .callout-label { color: var(--accent); }
-.callout-teal  .callout-label { color: var(--teal); }
-.callout p { font-size: .95rem; margin: 0; color: var(--ink); }
-.callout ul { margin: .5rem 0 0; padding-left: 1.2rem; }
-.callout ul li { font-size: .95rem; color: var(--ink); margin-bottom: .35rem; }
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #1f2937;
+      color: #6b7280;
+    }
 
-/* ── QUOTE ─────────────────────────────────────────────── */
-.pullquote {
-  border-left: 4px solid var(--accent);
-  padding: 1.1rem 1.6rem; margin: 2rem 0;
-  background: #f8fafc; border-radius: 0 8px 8px 0;
-}
-.pullquote p {
-  font-family: 'Instrument Serif', serif;
-  font-size: 1.15rem; font-style: italic;
-  color: var(--navy); line-height: 1.6; margin-bottom: .5rem;
-}
-.pullquote cite { font-size: .8rem; color: var(--muted); font-style: normal; font-weight: 500; }
+    .cta {
+      text-align: center;
+      margin-top: 40px;
+    }
 
-/* ── ATTACK CHAIN TABLE ────────────────────────────────── */
-.chain { margin: 1.5rem 0; }
-.chain-step {
-  display: grid; grid-template-columns: 56px 1fr;
-  gap: 0; margin-bottom: 1px;
-}
-.chain-step:last-child .chain-body { border-bottom: 1px solid var(--border); }
-.chain-num {
-  background: var(--navy); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'JetBrains Mono', monospace; font-size: .75rem; font-weight: 500;
-  border-right: 1px solid #334155; flex-shrink: 0;
-}
-.chain-body {
-  border: 1px solid var(--border); border-bottom: none; border-left: none;
-  padding: 1rem 1.2rem; background: #fff;
-}
-.chain-step:nth-child(even) .chain-body { background: #f8fafc; }
-.chain-date { font-size: .72rem; color: var(--muted); font-weight: 500; margin-bottom: .22rem; letter-spacing: .02em; }
-.chain-title { font-size: .95rem; font-weight: 700; color: var(--navy); margin-bottom: .3rem; }
-.chain-desc { font-size: .87rem; color: var(--body); line-height: 1.6; }
+    .cta button {
+      background: #1f6feb;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
 
-/* ── IOC TABLE ──────────────────────────────────────────── */
-.ioc-table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
-.ioc-table th { background: var(--navy); color: #fff; font-size: .78rem; font-weight: 600; text-align: left; padding: .75rem 1rem; }
-.ioc-table td { font-size: .85rem; color: var(--body); padding: .7rem 1rem; border-bottom: 1px solid var(--border); }
-.ioc-table tr:last-child td { border-bottom: none; }
-.ioc-table tr:nth-child(even) td { background: #f8fafc; }
-.ioc-val { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--red); }
-.sev-crit { font-weight: 700; color: var(--red); font-size: .78rem; }
-.sev-high { font-weight: 700; color: var(--orange); font-size: .78rem; }
-
-/* ── MAPPING TABLE ──────────────────────────────────────── */
-.map-table { width: 100%; border-collapse: collapse; margin: 1.4rem 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.map-table th { background: #0f172a; color: #fff; font-size: .78rem; font-weight: 600; text-align: left; padding: .75rem 1rem; }
-.map-table th:last-child { color: #7dd3fc; }
-.map-table td { font-size: .85rem; color: var(--body); padding: .8rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
-.map-table tr:last-child td { border-bottom: none; }
-.map-table tr:nth-child(even) td { background: #f8fafc; }
-.map-atk { font-weight: 600; color: var(--orange); }
-.map-ctrl { color: var(--teal); font-weight: 500; }
-
-/* ── TWO-COL AFFECTED ───────────────────────────────────── */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
-@media(max-width:600px){ .two-col { grid-template-columns: 1fr; } }
-
-/* ── PHASE CARDS ─────────────────────────────────────────── */
-.phase {
-  border: 1px solid var(--border); border-radius: 10px;
-  overflow: hidden; margin: 1.8rem 0;
-}
-.phase-header {
-  background: var(--navy); color: #fff;
-  padding: .9rem 1.4rem; display: flex; align-items: center; gap: .75rem;
-}
-.phase-num {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: rgba(255,255,255,.15);
-  display: flex; align-items: center; justify-content: center;
-  font-size: .75rem; font-weight: 700; flex-shrink: 0;
-}
-.phase-title { font-size: .95rem; font-weight: 700; letter-spacing: .01em; }
-.phase-body { padding: 1.4rem; background: #fff; }
-.phase-body p { font-size: .95rem; color: var(--body); margin-bottom: .85rem; }
-.phase-body ul { margin: .5rem 0; padding-left: 1.2rem; }
-.phase-body ul li { font-size: .93rem; color: var(--body); margin-bottom: .35rem; line-height: 1.6; }
-.phase-body ul li strong { color: var(--navy); }
-.phase-sub { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 1.2rem 0 .5rem; }
-
-/* ── AGENT PULSE HIGHLIGHT ──────────────────────────────── */
-.pulse-highlight {
-  background: linear-gradient(135deg, #eff6ff 0%, #ecfeff 100%);
-  border: 1px solid #bfdbfe; border-radius: 10px;
-  padding: 1.4rem 1.6rem; margin: 1.2rem 0;
-}
-.pulse-highlight-label {
-  font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--teal); margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem;
-}
-.pulse-highlight-label::before { content: '✦'; }
-.pulse-highlight p { font-size: .95rem; color: var(--ink); margin: 0; }
-
-/* ── CAP GRID ────────────────────────────────────────────── */
-.cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; margin: 1.2rem 0; }
-.cap-card {
-  border: 1px solid var(--border); border-radius: 8px;
-  padding: 1.1rem; background: #fff;
-  border-top: 3px solid var(--teal);
-}
-.cap-num { font-size: .68rem; font-weight: 700; color: var(--teal); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .35rem; }
-.cap-title { font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: .35rem; line-height: 1.3; }
-.cap-desc { font-size: .8rem; color: var(--muted); line-height: 1.55; margin-bottom: .6rem; }
-.cap-would { font-size: .75rem; color: var(--teal); font-style: italic; border-top: 1px solid var(--border); padding-top: .5rem; }
-
-/* ── PLATFORM TAGS ───────────────────────────────────────── */
-.ptags { display: flex; flex-wrap: wrap; gap: .4rem; margin: .9rem 0 1.3rem; }
-.ptag { font-size: .76rem; padding: .28em .72em; background: #f1f5f9; border: 1px solid var(--border); color: var(--body); border-radius: 4px; }
-
-/* ── CONCLUSION CTA ──────────────────────────────────────── */
-.final-cta {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  color: #fff; border-radius: 12px;
-  padding: 2.5rem 2rem; margin: 3rem 0;
-  text-align: center;
-}
-.final-cta h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: 1.7rem; font-weight: 400; color: #fff;
-  margin-bottom: .75rem;
-}
-.final-cta p { color: rgba(255,255,255,.72); font-size: .95rem; max-width: 540px; margin: 0 auto 1.5rem; }
-.cta-btns { display: flex; align-items: center; justify-content: center; gap: .75rem; flex-wrap: wrap; }
-.btn-primary {
-  background: #2563eb; color: #fff;
-  padding: .72em 1.6em; border-radius: 6px;
-  font-weight: 700; font-size: .88rem; text-decoration: none;
-  display: inline-flex; align-items: center; gap: .4rem;
-}
-.btn-primary:hover { background: #1d4ed8; }
-.btn-secondary {
-  background: rgba(255,255,255,.1); color: #fff;
-  padding: .72em 1.6em; border-radius: 6px;
-  font-weight: 600; font-size: .88rem; text-decoration: none;
-  border: 1px solid rgba(255,255,255,.25);
-}
-.btn-secondary:hover { background: rgba(255,255,255,.2); }
-
-/* ── DIVIDER ─────────────────────────────────────────────── */
-.divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
-
-/* ── RELATED POSTS ───────────────────────────────────────── */
-.related { background: var(--light); padding: 3.5rem 2rem; border-top: 1px solid var(--border); }
-.related-inner { max-width: 1100px; margin: 0 auto; }
-.related h3 { font-family: 'Instrument Serif', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: 1.5rem; font-weight: 400; }
-.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
-.related-card {
-  background: #fff; border: 1px solid var(--border); border-radius: 10px;
-  overflow: hidden; text-decoration: none; display: block;
-}
-.related-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px rgba(37,99,235,.08); }
-.rc-img { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-.rc-img.c1 { background: linear-gradient(135deg, #fef3c7, #fde68a); }
-.rc-img.c2 { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
-.rc-img.c3 { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
-.rc-body { padding: 1.1rem; }
-.rc-tag { font-size: .68rem; font-weight: 700; color: var(--teal); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
-.rc-title { font-size: .9rem; font-weight: 700; color: var(--navy); line-height: 1.35; margin-bottom: .4rem; }
-.rc-author { font-size: .75rem; color: var(--muted); }
-
-/* ── DEMO CTA SECTION ────────────────────────────────────── */
-.demo-section {
-  background: linear-gradient(135deg, #4c1d95, #1e3a8a);
-  padding: 4rem 2rem; text-align: center; color: #fff;
-}
-.demo-section h2 { font-family: 'Instrument Serif', serif; font-size: 1.8rem; font-weight: 400; margin-bottom: .5rem; }
-.demo-section > p { color: rgba(255,255,255,.7); font-size: .95rem; margin-bottom: 2rem; }
-.demo-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; max-width: 900px; margin: 0 auto 2.5rem; text-align: left; }
-.demo-feat { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); border-radius: 8px; padding: 1.1rem; }
-.demo-feat-icon { font-size: 1.3rem; margin-bottom: .4rem; }
-.demo-feat p { font-size: .87rem; color: rgba(255,255,255,.8); margin: 0; line-height: 1.55; }
-.demo-feat strong { color: #fff; }
-
-/* ── NEWSLETTER ──────────────────────────────────────────── */
-.newsletter { background: #f8fafc; border-top: 1px solid var(--border); padding: 2.5rem 2rem; text-align: center; }
-.newsletter h3 { font-family: 'Instrument Serif', serif; font-size: 1.25rem; color: var(--navy); margin-bottom: .35rem; font-weight: 400; }
-.newsletter p { font-size: .88rem; color: var(--muted); margin-bottom: 1.2rem; }
-.nl-form { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
-.nl-input {
-  padding: .65em 1em; border: 1px solid var(--border); border-radius: 6px;
-  font-family: 'Figtree', sans-serif; font-size: .88rem;
-  width: 240px; color: var(--ink); outline: none;
-}
-.nl-input:focus { border-color: var(--accent); }
-.nl-btn {
-  background: var(--accent); color: #fff; border: none;
-  padding: .65em 1.4em; border-radius: 6px; font-weight: 700;
-  font-size: .88rem; font-family: 'Figtree', sans-serif; cursor: pointer;
-}
-.nl-btn:hover { background: #1d4ed8; }
-
-/* ── FOOTER ──────────────────────────────────────────────── */
-footer { background: var(--navy); color: rgba(255,255,255,.55); padding: 3rem 2rem 2rem; }
-.footer-inner { max-width: 1200px; margin: 0 auto; }
-.footer-top { display: grid; grid-template-columns: 1.5fr repeat(4, 1fr); gap: 2rem; margin-bottom: 2.5rem; }
-.footer-brand .logo { font-weight: 800; font-size: 1.1rem; color: #fff; margin-bottom: .5rem; }
-.footer-brand p { font-size: .8rem; color: rgba(255,255,255,.4); line-height: 1.65; }
-.footer-col h4 { font-size: .75rem; font-weight: 700; color: rgba(255,255,255,.7); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .85rem; }
-.footer-col a { display: block; font-size: .8rem; color: rgba(255,255,255,.45); text-decoration: none; margin-bottom: .4rem; }
-.footer-col a:hover { color: #fff; }
-.footer-bottom { border-top: 1px solid rgba(255,255,255,.08); padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: .75rem; font-size: .75rem; }
-.footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
-.footer-bottom a:hover { color: #fff; }
-@media(max-width:768px){
-  .footer-top { grid-template-columns: 1fr 1fr; }
-  .nav-links { display: none; }
-  .stats-row { grid-template-columns: repeat(3, 1fr); }
-}
-</style>
+    .cta button:hover {
+      background: #2563eb;
+    }
+  </style>
 </head>
 <body>
 
-<!-- BANNER -->
-<div class="banner">
-  Introducing Agent Pulse: Runtime Governance for the Agentic Enterprise. &nbsp;<a href="https://singulr.ai/products/agent-pulse">Read More →</a>
-</div>
+<header>
+  <h1>Singulr AI Blog</h1>
+  <p>Insights on AI, Agents, and the Future of Software — by Madan Singhal</p>
+</header>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="https://singulr.ai/" class="nav-logo">
-      <div class="nav-logo-mark">S</div>
-      <div class="nav-logo-text">singulr <span>AI</span></div>
-    </a>
-    <div class="nav-links">
-      <a href="file:///Users/msinghal/Downloads/singulr-litellm-blog.html#">Product</a>
-      <a href="file:///Users/msinghal/Downloads/singulr-litellm-blog.html#">Solutions</a>
-      <a href="file:///Users/msinghal/Downloads/singulr-litellm-blog.html#">Resources</a>
-      <a href="file:///Users/msinghal/Downloads/singulr-litellm-blog.html#">About</a>
-      <a href="file:///Users/msinghal/Downloads/singulr-litellm-blog.html#">Partner</a>
-      <a href="https://singulr.ai/request-a-demo" class="nav-cta">Get Demo →</a>
-    </div>
-  </div>
+<nav>
+  <a href="#">Home</a>
+  <a href="#">Articles</a>
+  <a href="#">Projects</a>
+  <a href="#">About</a>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-grid-lines"></div>
-  <div class="hero-inner">
-    <div class="hero-tag">AI Supply Chain Security · March 2026</div>
-    <h1>When Your Security Scanner<br>Becomes <em>The Weapon</em></h1>
-    <p class="hero-sub">How a poisoned vulnerability scanner handed attackers the keys to LiteLLM's PyPI account — and why 3.4 million daily downloads made it one of the most dangerous AI supply chain attacks ever recorded.</p>
-    <div class="hero-meta">
-      <span class="meta-item"><strong>March 27, 2026</strong></span>
-      <span class="meta-sep">·</span>
-      <span class="meta-item">7 Min Read</span>
-      <span class="meta-sep">·</span>
-      <span class="meta-item">CVE-2026-33634</span>
-    </div>
-    <div class="hero-badges">
-      <span class="hbadge hbadge-red">Critical Severity</span>
-      <span class="hbadge hbadge-orange">CVSS 9.4 / 10</span>
+<div class="container">
+
+  <div class="post">
+    <h2>🚀 Building AI Agents That Actually Work</h2>
+    <p>Most AI agents fail in production. Here's what actually matters when building reliable systems...</p>
+    <div>
+      <span class="tag">AI</span>
+      <span class="tag">Agents</span>
+      <span class="tag">Engineering</span>
     </div>
   </div>
+
+  <div class="post">
+    <h2>🧠 The Future of LLM Applications</h2>
+    <p>We are moving from prompts to systems. This shift changes everything about how we design software...</p>
+    <div>
+      <span class="tag">LLM</span>
+      <span class="tag">Startups</span>
+    </div>
+  </div>
+
+  <div class="post">
+    <h2>⚡ Scaling AI Products at Singulr</h2>
+    <p>Lessons learned from building AI-native products and scaling them for real users...</p>
+    <div>
+      <span class="tag">Scaling</span>
+      <span class="tag">Infra</span>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Stay Updated</h2>
+    <p>Follow the journey of building next-gen AI systems.</p>
+    <button>Subscribe</button>
+  </div>
+
 </div>
 
-<!-- AUTHOR STRIP -->
-<div class="author-strip">
-  <div class="author-strip-inner">
-    <div class="author-info">
-      <div class="author-avatar">M</div>
-      <div>
-        <div class="author-name">Madan Singhal</div>
-        <div class="author-role">Head of AI, Singulr AI</div>
-      </div>
-    </div>
-    <a href="https://singulr.ai/request-a-demo" class="share-btn">↗ Request a Demo</a>
-  </div>
-</div>
-
-<!-- ARTICLE -->
-<div class="article">
-<div class="article-inner">
-
-<p>On March 24, 2026, a supply chain attack hit LiteLLM — one of the most widely used AI infrastructure libraries in the world, downloaded 3.4 million times every day. But this wasn't a typical attack where a maintainer's account was phished or a malicious package was typosquatted. The attack was far more sophisticated: threat actor <strong>TeamPCP</strong> compromised the very security scanning tool that LiteLLM used to protect itself, then used those stolen credentials to backdoor the library directly.</p>
-
-<p>The result: two poisoned PyPI versions (<strong>litellm 1.82.7</strong> and <strong>1.82.8</strong>) containing a credential stealer that swept environment variables, SSH keys, cloud provider credentials, Kubernetes tokens, and database passwords — then silently exfiltrated them to an attacker-controlled server. The compromised packages were live for <strong>approximately three hours</strong> before PyPI quarantined them. Any AI agent framework, MCP server, or orchestration pipeline that pulled an unpinned version of LiteLLM during that window was exposed.</p>
-
-<p>Keep reading to understand how this attack was executed, who is affected, what to do right now, and how <strong>Singulr AI Agent Pulse</strong> provides the runtime governance layer that would have detected and contained it.</p>
-
-<!-- STATS -->
-<div class="stats-row">
-  <div class="stat"><span class="stat-val r">3.4M</span><div class="stat-lbl">Daily PyPI Downloads</div></div>
-  <div class="stat"><span class="stat-val o">3 hrs</span><div class="stat-lbl">Packages Live Before Quarantine</div></div>
-  <div class="stat"><span class="stat-val r">9.4</span><div class="stat-lbl">CVSS4B Score (Near Max)</div></div>
-  <div class="stat"><span class="stat-val b">88</span><div class="stat-lbl">AI Bot Comments in 102 Seconds</div></div>
-  <div class="stat"><span class="stat-val o">5</span><div class="stat-lbl">Supply Chain Ecosystems Hit</div></div>
-  <div class="stat"><span class="stat-val t">480M</span><div class="stat-lbl">Total PyPI Lifetime Downloads</div></div>
-</div>
-
-<!-- ═══ S1 ═══ -->
-<h2>It's Already in Your AI Stack</h2>
-
-<p>LiteLLM is not a niche library. It is the routing layer underpinning a significant fraction of all production AI infrastructure — serving as the universal proxy that routes calls to OpenAI, Anthropic, Azure OpenAI, Google Vertex, AWS Bedrock, and dozens of other LLM providers. Its adoption extends far beyond direct installation: it is pulled in as a transitive dependency by LangChain integrations, CrewAI, AutoGen, and dozens of MCP server implementations.</p>
-
-<p>This is what made the March 24 attack so significant. <strong>The exposed library is not a dev tool or a niche utility. It is core AI infrastructure.</strong> Any team building on top of agents, pipelines, or multi-provider LLM routing has a very high probability that LiteLLM is somewhere in their dependency graph — and in many cases, they may not even know it is there.</p>
-
-<div class="callout callout-warn">
-  <span class="callout-label">⚠ Transitive Risk</span>
-  <p>Even if you did not explicitly install LiteLLM, you may have received the compromised version through an AI agent framework, MCP server, or LLM orchestration library that lists LiteLLM as a dependency. Check your full dependency tree — not just your direct installs.</p>
-</div>
-
-<!-- ═══ S2 ═══ -->
-<h2>How a Security Tool Became the Attack Vector</h2>
-
-<p>The sophistication of this attack lies in its indirection. TeamPCP did not attack LiteLLM directly. They attacked <strong>Trivy</strong>, Aqua Security's open-source vulnerability scanner — the tool LiteLLM was using to check for security issues in its own CI/CD pipeline. Once Trivy was compromised, the attacker had access to LiteLLM's publishing credentials, and from there, the rest was straightforward.</p>
-
-<div class="pullquote">
-  <p>"TeamPCP did not need to attack LiteLLM directly. They compromised Trivy, a vulnerability scanner running inside LiteLLM's CI pipeline without version pinning. That single unmanaged dependency handed over the PyPI publishing credentials, and from there the attacker backdoored a library that serves 95 million downloads per month."</p>
-  <cite>— Jacob Krell, Senior Director for Secure AI Solutions, Suzu Labs</cite>
-</div>
-
-<p>The attack unfolded over five weeks, targeting five separate supply chain ecosystems in sequence:</p>
-
-<div class="chain">
-  <div class="chain-step">
-    <div class="chain-num">01</div>
-    <div class="chain-body">
-      <div class="chain-date">Mid-February 2026</div>
-      <div class="chain-title">Initial Trivy Compromise via Misconfigured GitHub Actions</div>
-      <div class="chain-desc">An automated bot ("hackerbot-claw") exploits a misconfigured workflow in Trivy's own repository, stealing a privileged Personal Access Token. This grants write access to the trivy-action repository and its release infrastructure.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">02</div>
-    <div class="chain-body">
-      <div class="chain-date">March 19, 2026</div>
-      <div class="chain-title">Tag Hijacking — Trivy-Action v0.69.4 Poisoned</div>
-      <div class="chain-desc">Attackers rewrite existing Git tags to point to a malicious release. Because most CI pipelines reference tags rather than pinned commit SHAs, thousands of pipelines silently began executing attacker-controlled code with no indication anything had changed.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">03</div>
-    <div class="chain-body">
-      <div class="chain-date">March 23, 2026</div>
-      <div class="chain-title">Lateral Move — Checkmarx KICS Compromised</div>
-      <div class="chain-desc">The same credential-harvesting infrastructure pivots to Checkmarx KICS (Keep Infrastructure as Code Secure). A fake C2 domain, checkmarx[.]zone, is registered to impersonate the legitimate Checkmarx security company.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">04</div>
-    <div class="chain-body">
-      <div class="chain-date">March 24, 2026 — 10:39 UTC</div>
-      <div class="chain-title">PYPI_PUBLISH Token Stolen → LiteLLM 1.82.7 Published</div>
-      <div class="chain-desc">LiteLLM's CI runs Trivy via apt without a pinned version, pulling the compromised action. The PYPI_PUBLISH token stored as a GitHub Actions environment variable is exfiltrated. Within minutes, attackers publish litellm 1.82.7 with a credential stealer embedded in proxy_server.py.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">05</div>
-    <div class="chain-body">
-      <div class="chain-date">March 24, 2026 — 10:52 UTC</div>
-      <div class="chain-title">LiteLLM 1.82.8 Published with .pth Persistence Mechanism</div>
-      <div class="chain-desc">Thirteen minutes later, 1.82.8 follows — adding litellm_init.pth, a Python path configuration file that executes malicious code at Python interpreter startup before any user code runs. This is stealth persistence by design.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">06</div>
-    <div class="chain-body">
-      <div class="chain-date">March 24, 2026 — 12:44–12:46 UTC</div>
-      <div class="chain-title">AI-Generated Bot Spam Floods GitHub Issue #24512</div>
-      <div class="chain-desc">When community members open a disclosure issue, attackers deploy 88 bot comments from 73 unique previously-compromised developer accounts in 102 seconds — one of the first documented operational uses of AI to suppress a security disclosure.</div>
-    </div>
-  </div>
-  <div class="chain-step">
-    <div class="chain-num">07</div>
-    <div class="chain-body">
-      <div class="chain-date">March 24, 2026 — ~16:00 UTC</div>
-      <div class="chain-title">PyPI Quarantines Both Packages</div>
-      <div class="chain-desc">After approximately three hours of live exposure, PyPI quarantines both malicious versions. The PyPA issues a formal security advisory. LiteLLM engages Google Mandiant for forensics and pauses all new releases pending a full supply chain review.</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ S3 ═══ -->
-<h2>The Credential Loot Box</h2>
-
-<p>The malware embedded in <code>proxy_server.py</code> was purpose-built for maximum damage against AI infrastructure operators — the teams who, by definition, hold API keys for every cloud provider and LLM vendor they work with. It performed a systematic sweep of the infected environment targeting exactly what an AI platform team is most likely to have present.</p>
-
-<p>The credential stealer targeted:</p>
-<ul>
-  <li>All environment variables — swept in a single pass</li>
-  <li>SSH private keys from <code>~/.ssh/</code> and common key paths</li>
-  <li>AWS credentials (<code>~/.aws/credentials</code>, <code>~/.aws/config</code>)</li>
-  <li>GCP application default credentials and service account keys</li>
-  <li>Azure CLI tokens and service principal credentials</li>
-  <li>Kubernetes service account tokens and kubeconfig files</li>
-  <li>Database connection strings and passwords from configuration files</li>
-</ul>
-
-<p>All harvested secrets were encrypted and transmitted via POST request to <code>models.litellm[.]cloud</code> — a domain deliberately crafted to look like an official LiteLLM endpoint. The encrypted HTTPS payload meant that network monitoring tools flagged nothing unusual in outbound traffic.</p>
-
-<h3>Why Standard Defenses Failed</h3>
-
-<p>This attack exposes a critical gap in how we verify package integrity. The malicious content was published to PyPI using <strong>legitimate stolen credentials</strong>. The package passed every standard integrity check:</p>
-
-<div class="callout callout-red">
-  <span class="callout-label">⚠ Hash Verification Illusion</span>
-  <p><strong>pip install --require-hashes would have passed.</strong> The wheel's RECORD file correctly declared <code>litellm_init.pth</code> with a matching hash. No hash mismatch. No suspicious domain in the package metadata. No typosquatted package name. The only detection path was behavioral — inspecting what the package <em>does</em> at runtime, not what it <em>is</em> on disk.</p>
-</div>
-
-<!-- ═══ S4 ═══ -->
-<h2>Your Existing DLP and SAST Are Not Enough</h2>
-
-<p>The persistence mechanism in version 1.82.8 illustrates exactly why perimeter defenses and static analysis are insufficient for AI supply chain threats. The <code>litellm_init.pth</code> file uses Python's legitimate path configuration mechanism to execute arbitrary code before any user application code runs — before your logging framework initializes, before your SIEM agent starts, before any application-level security control is active.</p>
-
-<p>This is not a zero-day. It is not an obfuscated exploit. It is a well-documented Python feature being used as a persistence mechanism. Static analysis tools do not flag it as malicious because, in isolation, a .pth file is not malicious. The only way to detect it is runtime behavioral monitoring at the moment of execution.</p>
-
-<p>Similarly, your DLP investment is blind to this threat. The exfiltration pathway — encrypted HTTPS POST to a plausible-looking domain — is indistinguishable from legitimate LiteLLM telemetry to any network-level DLP tool. Only an egress allowlist enforced at the process level for your AI infrastructure components would have blocked the exfiltration at the network layer.</p>
-
-<!-- ═══ S5 ═══ -->
-<h2>Are You Affected?</h2>
-
-<div class="two-col">
-  <div class="callout callout-red">
-    <span class="callout-label">⚠ You May Be Affected If...</span>
-    <ul>
-      <li>You ran <code>pip install litellm</code> on March 24 between <strong>10:39–16:00 UTC</strong></li>
-      <li>You received v1.82.7 or v1.82.8 with no version pin</li>
-      <li>You built a Docker image with an unpinned pip install during this window</li>
-      <li>Any AI agent framework, MCP server, or orchestration tool pulled LiteLLM as a transitive dependency</li>
-      <li>Your CI/CD auto-updated LiteLLM during the incident window</li>
-    </ul>
-  </div>
-  <div class="callout callout-green">
-    <span class="callout-label">✓ You Are Safe If...</span>
-    <ul>
-      <li>You use <strong>LiteLLM Cloud</strong> (managed service)</li>
-      <li>You run the official Docker image: <code>ghcr.io/berriai/litellm</code></li>
-      <li>You are on <strong>v1.82.6 or earlier</strong> and did not upgrade</li>
-      <li>You installed from source via GitHub (repo was not compromised)</li>
-      <li>Your install was pinned to a specific safe version hash</li>
-    </ul>
-  </div>
-</div>
-
-<h3>Indicators of Compromise (IoCs)</h3>
-<table class="ioc-table">
-  <thead><tr><th>Indicator Type</th><th>Value</th><th>Severity</th></tr></thead>
-  <tbody>
-    <tr><td>Filesystem Artifact</td><td class="ioc-val">litellm_init.pth in site-packages</td><td class="sev-crit">CRITICAL</td></tr>
-    <tr><td>C2 Domain (LiteLLM)</td><td class="ioc-val">models.litellm[.]cloud</td><td class="sev-crit">CRITICAL</td></tr>
-    <tr><td>C2 Domain (Residual)</td><td class="ioc-val">checkmarx[.]zone</td><td class="sev-high">HIGH</td></tr>
-    <tr><td>Compromised Versions</td><td class="ioc-val">litellm==1.82.7, litellm==1.82.8</td><td class="sev-crit">CRITICAL</td></tr>
-    <tr><td>Trivy Binary (tag-hijacked)</td><td class="ioc-val">trivy-action v0.69.4</td><td class="sev-crit">CRITICAL</td></tr>
-    <tr><td>Malicious File</td><td class="ioc-val">proxy_server.py (modified in 1.82.7 &amp; 1.82.8)</td><td class="sev-crit">CRITICAL</td></tr>
-  </tbody>
-</table>
-
-<!-- ═══ S6: RECOMMENDATIONS ═══ -->
-<h2>Recommendations: A Three-Phase Response</h2>
-
-<p>The AI threat landscape has fundamentally shifted. The risk is no longer limited to employees pasting sensitive data into ChatGPT. Today, any unpinned AI dependency in a CI/CD pipeline can become a vector for credential theft at scale — and the library doing the most damage may be a transitive dependency you never explicitly installed. Staying ahead of this threat requires a proactive, continuous approach to discovery, containment, and governance.</p>
-
-<div class="phase">
-  <div class="phase-header">
-    <div class="phase-num">1</div>
-    <div class="phase-title">Detect &amp; Assess Your Exposure</div>
-  </div>
-  <div class="phase-body">
-    <p>The compromised <code>litellm_init.pth</code> file runs inside your Python environment at interpreter startup — before application code. Traditional perimeter defenses don't see it. Security teams must extend visibility to the dependency layer of their AI stack.</p>
-
-    <div class="phase-sub">Immediate Detection Steps</div>
-    <ul>
-      <li>Run: <code>find /usr/lib/python*/site-packages/ -name "litellm_init.pth"</code> across all systems</li>
-      <li>Check DNS and SIEM logs for any outbound lookups to <code>models.litellm[.]cloud</code> or <code>checkmarx[.]zone</code> — a single resolved lookup indicates payload execution</li>
-      <li>Run <code>pip show litellm</code> in every environment and CI runner to verify the installed version</li>
-      <li>Audit your GitHub Actions workflows for any reference to <code>trivy-action@v0.69.4</code> by tag (not pinned SHA)</li>
-      <li>Scan your full dependency tree — not just direct dependencies — using tools like <code>pip-audit</code> or Snyk</li>
-    </ul>
-
-    <div class="phase-sub">The Continuous Discovery Challenge</div>
-    <p>Manual signature maintenance is unsustainable. LiteLLM is neither the first nor the last AI library in this category to be targeted. For every tool you identify and audit today, new AI infrastructure components will emerge tomorrow — many of them pulling in sensitive dependencies without explicit version pinning.</p>
-
-    <div class="pulse-highlight">
-      <div class="pulse-highlight-label">Singulr Agent Pulse</div>
-      <p>Agent Pulse's <strong>Agent Discovery</strong> capability continuously maps all AI agents, tool connections, MCP server bindings, and the full dependency graph across your enterprise — including transitive LiteLLM relationships you didn't know existed. When a new agentic AI component surfaces with high-risk access patterns, Singulr surfaces it automatically and pushes updated risk intelligence to your integrated EDR/XDR platforms.</p>
-    </div>
-  </div>
-</div>
-
-<div class="phase">
-  <div class="phase-header">
-    <div class="phase-num">2</div>
-    <div class="phase-title">Contain &amp; Remediate</div>
-  </div>
-  <div class="phase-body">
-    <p>Whether your scan revealed active exposure or a clean environment, the next step is the same: establish hard controls before the next incident. Do not treat this as a one-time exercise.</p>
-
-    <div class="phase-sub">If You Were Affected — Rotate Immediately</div>
-    <p>Per the PyPA security advisory: <strong>assume any credentials available to the LiteLLM environment may have been exposed.</strong> Do not wait for forensic confirmation before rotating.</p>
-    <ul>
-      <li>All LLM API keys (OpenAI, Anthropic, Google, Azure OpenAI, AWS Bedrock)</li>
-      <li>AWS/GCP/Azure IAM credentials and service account keys</li>
-      <li>Database passwords and connection strings</li>
-      <li>SSH private keys present on affected systems</li>
-      <li>Kubernetes service account tokens</li>
-      <li>Any secrets stored in environment variables or <code>.env</code> files</li>
-    </ul>
-
-    <div class="phase-sub">Immediate Hardening — Version Pinning</div>
-    <p>Pin LiteLLM to <strong>v1.82.6 or earlier</strong> immediately. Do not upgrade until LiteLLM announces a verified clean release after completing their supply chain review. More importantly, extend this discipline to every AI dependency in your stack:</p>
-    <ul>
-      <li><strong>requirements.txt</strong>: Use exact version pins (<code>litellm==1.82.6</code>), not ranges</li>
-      <li><strong>GitHub Actions</strong>: Pin every action by full commit SHA, never by tag name</li>
-      <li><strong>Docker builds</strong>: Pin all <code>pip install</code> commands; do not allow unpinned installs in CI/CD</li>
-      <li><strong>PyPI trusted publishing</strong>: Migrate from static PYPI_PUBLISH tokens to OIDC-based JWT trusted publishing</li>
-    </ul>
-
-    <div class="phase-sub">Block at Network Level</div>
-    <p>Block outbound traffic to <code>models.litellm[.]cloud</code> and <code>checkmarx[.]zone</code> at your network perimeter immediately. Even after remediation, historical DNS lookups in your SIEM may reveal exposure you have not yet fully assessed.</p>
-
-    <div class="pulse-highlight">
-      <div class="pulse-highlight-label">Singulr Agent Pulse</div>
-      <p>Agent Pulse's <strong>Agent Runtime Controls</strong> enforce egress allowlists for AI infrastructure processes in real time. An unauthorized outbound POST from a Python process to an unrecognized domain would have been blocked at the moment of execution — before a single credential left the environment. <strong>The C2 exfiltration to models.litellm[.]cloud would not have succeeded.</strong></p>
-    </div>
-  </div>
-</div>
-
-<div class="phase">
-  <div class="phase-header">
-    <div class="phase-num">3</div>
-    <div class="phase-title">Govern with Runtime Controls</div>
-  </div>
-  <div class="phase-body">
-    <p>Blocking and patching alone are insufficient. The LiteLLM incident is not an isolated event — it is part of a deliberate campaign that already hit Trivy, Checkmarx KICS, and multiple other ecosystems. Organizations that respond with one-time fixes will remain reactive, addressing yesterday's threat while the next attack is already in motion.</p>
-
-    <div class="phase-sub">Governance Requirements for AI Dependencies</div>
-    <ul>
-      <li><strong>Approved dependency inventory</strong> with verified version pins and hash locks</li>
-      <li><strong>Mandatory CI/CD gates</strong> that reject any unpinned AI library installation</li>
-      <li><strong>Runtime egress allowlists</strong> scoped to each AI infrastructure component</li>
-      <li><strong>SBOM generation</strong> at build time for all AI-enabled services</li>
-      <li><strong>Continuous drift monitoring</strong> — alert when runtime behavior deviates from approved baseline</li>
-    </ul>
-
-    <div class="phase-sub">Continuous Monitoring</div>
-    <p>Even in environments where strict dependency pinning is enforced today, monitoring must continue. AI dependency trees are complex and shift rapidly. New libraries emerge, existing ones gain new transitive dependencies, and developer tooling silently updates components that were previously stable. Shadow AI thrives in visibility gaps.</p>
-
-    <div class="pulse-highlight">
-      <div class="pulse-highlight-label">Singulr Agent Pulse</div>
-      <p>Agent Pulse provides continuous runtime governance across your full agentic stack. <strong>Agent Governance</strong> detects configuration drift the moment it occurs — a modified <code>proxy_server.py</code> or a new <code>.pth</code> file in site-packages triggers a policy violation alert against your approved baseline. Combined with <strong>Agent Risk Intelligence</strong>, powered by the Singulr Trust Feed, your teams receive continuous risk scoring updates as the threat landscape evolves — not just at install time.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ AGENT PULSE FULL ═══ -->
-<h2>How Agent Pulse Maps to the LiteLLM Attack</h2>
-
-<p>Every stage of the TeamPCP attack chain had a corresponding Agent Pulse control that would have detected or blocked it. This is not retrofitting — it is what runtime governance at the agentic layer was designed to provide.</p>
-
-<table class="map-table">
-  <thead>
-    <tr>
-      <th>Attack Stage</th>
-      <th>What Happened</th>
-      <th>Agent Pulse Control</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="map-atk">Trivy CI Compromise</td>
-      <td>Unpinned security scanner exfiltrated the PYPI_PUBLISH token</td>
-      <td class="map-ctrl">Agent Discovery maps CI/CD tool connections; Risk Intelligence flags unpinned dependency risk</td>
-    </tr>
-    <tr>
-      <td class="map-atk">Credential Harvesting</td>
-      <td>Malware swept env vars, SSH keys, AWS/GCP/Azure credentials</td>
-      <td class="map-ctrl">Runtime Controls block unauthorized file access; anomalous credential sweeps trigger instant alert</td>
-    </tr>
-    <tr>
-      <td class="map-atk">.pth Persistence</td>
-      <td>litellm_init.pth executed malicious code at Python startup</td>
-      <td class="map-ctrl">Agent Governance detects new .pth creation as configuration drift against approved baseline policy</td>
-    </tr>
-    <tr>
-      <td class="map-atk">C2 Exfiltration</td>
-      <td>Encrypted POST to models.litellm[.]cloud exfiltrated secrets</td>
-      <td class="map-ctrl">Runtime Controls enforce egress allowlists; unauthorized outbound POST blocked before any data leaves</td>
-    </tr>
-    <tr>
-      <td class="map-atk">Transitive Exposure</td>
-      <td>MCP servers and agent frameworks silently pulled in LiteLLM</td>
-      <td class="map-ctrl">Agent Discovery surfaces the full dependency graph including every transitive LiteLLM relationship</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3>Four Integrated Capabilities</h3>
-<div class="cap-grid">
-  <div class="cap-card">
-    <div class="cap-num">01 · Agent Discovery</div>
-    <div class="cap-title">Continuous Visibility &amp; Context Graph</div>
-    <div class="cap-desc">Maps all AI agents, tool connections, MCP server bindings, and permission chains — including agents and dependencies you didn't know existed.</div>
-    <div class="cap-would">↳ Would have mapped every pipeline with a transitive LiteLLM dependency</div>
-  </div>
-  <div class="cap-card">
-    <div class="cap-num">02 · Risk Intelligence</div>
-    <div class="cap-title">Singulr Trust Feed + Red-Teaming</div>
-    <div class="cap-desc">Continuously evaluates agent risk posture through Singulr Trust Feed intelligence and AI red-teaming simulations against adversarial scenarios.</div>
-    <div class="cap-would">↳ Would have flagged LiteLLM's credential access patterns as anomalous</div>
-  </div>
-  <div class="cap-card">
-    <div class="cap-num">03 · Agent Governance</div>
-    <div class="cap-title">Policy Enforcement + Drift Detection</div>
-    <div class="cap-desc">Defines and enforces policies aligned to agent type, data sensitivity, and tool access scope. Alerts on configuration changes and runtime drift.</div>
-    <div class="cap-would">↳ Would have detected proxy_server.py modification as policy drift</div>
-  </div>
-  <div class="cap-card">
-    <div class="cap-num">04 · Runtime Controls</div>
-    <div class="cap-title">Real-Time Enforcement at Execution</div>
-    <div class="cap-desc">Enforces controls across agent interactions in real time — blocking unauthorized access, prompt injection, and data leakage at the moment it happens.</div>
-    <div class="cap-would">↳ Would have blocked the POST to models.litellm[.]cloud in real time</div>
-  </div>
-</div>
-
-<h3>Integration-First by Design</h3>
-<p>Agent Pulse supports the full modern AI stack and is deployable without replacing existing security infrastructure:</p>
-<div class="ptags">
-  <span class="ptag">Copilot Studio</span>
-  <span class="ptag">AWS Bedrock</span>
-  <span class="ptag">Azure AI Foundry</span>
-  <span class="ptag">GCP Vertex AI</span>
-  <span class="ptag">Databricks</span>
-  <span class="ptag">ServiceNow Now Assist</span>
-  <span class="ptag">CrewAI</span>
-  <span class="ptag">LangGraph</span>
-  <span class="ptag">OpenTelemetry Agents</span>
-  <span class="ptag">ChatGPT GPTs</span>
-  <span class="ptag">n8n</span>
-  <span class="ptag">MCP Servers</span>
-  <span class="ptag">EDR / XDR / SIEM</span>
-</div>
-
-<div class="pullquote" style="border-left-color: var(--teal);">
-  <p>"As AI becomes more autonomous, invoking tools and operating across increasingly agentic workflows, governance has to be something you apply continuously. The only way to successfully manage this at scale is through a unified approach that enforces governance controls, provides visibility across agents, models, and tools, and continuously measures whether safeguards are working as designed."</p>
-  <cite>— Alex Green, CISO, Delta Dental Plans Association</cite>
-</div>
-
-<!-- ═══ CONCLUSION ═══ -->
-<h2>Conclusion</h2>
-
-<p>The TeamPCP campaign — spanning Trivy, Checkmarx KICS, and LiteLLM across five supply chain ecosystems in under five weeks — represents a structural shift in how AI infrastructure is targeted. These are not opportunistic attacks. They are deliberate campaigns that identify tools with elevated access to automated pipelines and compromise the trust infrastructure surrounding them.</p>
-
-<p>The real challenge is not any single compromised library. The problem is the loss of visibility and control over an AI dependency graph that is too large, too dynamic, and too interconnected for manual security processes to track. <strong>LiteLLM is the backbone of modern AI infrastructure.</strong> When it was poisoned, it became an infection hub for every pipeline that consumed it.</p>
-
-<p>Organizations that respond with one-time patching, one-time version pinning, or one-time blocking will stay reactive. Security leaders need a programmatic response that treats AI dependencies as a new class of infrastructure risk — with the same rigor applied to identity, endpoints, and cloud workloads.</p>
-
-<p>That response requires:</p>
-<ul>
-  <li><strong>Continuous discovery</strong> to surface AI dependencies and agents employees deploy, not just those IT approves</li>
-  <li><strong>Runtime governance</strong> that enforces policy at the moment an agent or dependency takes action — not on the next scan cycle</li>
-  <li><strong>Adaptive enforcement</strong> that keeps pace with the velocity of AI library development and threat actor sophistication</li>
-</ul>
-
-<p>The window to establish control over agentic AI infrastructure risk is closing.</p>
-<p><strong>The time to act is now.</strong></p>
-
-<div class="final-cta">
-  <h2>See How Singulr Governs Your AI Stack</h2>
-  <p>In a 30-minute personalized demo, see how Agent Pulse provides the runtime control layer that would have detected and contained the LiteLLM supply chain attack.</p>
-  <div class="cta-btns">
-    <a href="https://singulr.ai/request-a-demo" class="btn-primary">Book Your Demo Now →</a>
-    <a href="https://singulr.ai/products/agent-pulse" class="btn-secondary">Learn About Agent Pulse</a>
-  </div>
-</div>
-
-<hr class="divider">
-<p style="font-size:.82rem; color:var(--muted); line-height:1.65;">
-  <strong>Sources:</strong> LiteLLM Official Security Advisory (docs.litellm.ai) · Snyk Security Analysis · Kaspersky Threat Intelligence · ReversingLabs Research · GitGuardian Incident Report · The Register · Python Packaging Authority (PyPA) Advisory ·
-  <a href="https://www.businesswire.com/news/home/20260309938690/en/Singulr-AI-Launches-Agent-Pulse-Extending-Its-AI-Governance-and-Control-Plane-to-Autonomous-Agents-and-MCP" target="_blank" style="color:var(--accent);">Singulr Agent Pulse Launch (BusinessWire)</a>
-  <br>CVE-2026-33634 · CVSS4B 9.4 · Incident Date: March 24, 2026 · Contact security@berri.ai if your systems may be affected.
-</p>
-
-</div><!-- /article-inner -->
-</div><!-- /article -->
-
-<!-- NEWSLETTER -->
-<div class="newsletter">
-  <div style="max-width:500px; margin:0 auto;">
-    <h3>Newsletter</h3>
-    <p>Occasional updates from Singulr</p>
-    <div class="nl-form">
-      <input class="nl-input" type="email" placeholder="your@email.com">
-      <button class="nl-btn">Subscribe</button>
-    </div>
-  </div>
-</div>
-
-<!-- RELATED POSTS -->
-<div class="related">
-  <div class="related-inner">
-    <h3>Recent Blogs</h3>
-    <div class="related-grid">
-      <a href="https://singulr.ai/blog/clawdbot-moltbot-ai-security-review" class="related-card">
-        <div class="rc-img c1">🤖</div>
-        <div class="rc-body">
-          <div class="rc-tag">AI Agent Security</div>
-          <div class="rc-title">Clawdbot / Moltbot: When an "AI Assistant" Becomes a Privileged Remote Operator</div>
-          <div class="rc-author">Abhishek Shingane · Principal Engineer</div>
-        </div>
-      </a>
-      <a href="https://singulr.ai/blog/the-coming-log4j-moment-for-ai" class="related-card">
-        <div class="rc-img c2">⚠️</div>
-        <div class="rc-body">
-          <div class="rc-tag">AI Governance</div>
-          <div class="rc-title">The Coming "Log4j Moment" for AI</div>
-          <div class="rc-author">Ronan Fagan · Singulr AI</div>
-        </div>
-      </a>
-      <a href="https://singulr.ai/resources/blogs" class="related-card">
-        <div class="rc-img c3">🛡️</div>
-        <div class="rc-body">
-          <div class="rc-tag">Supply Chain Security</div>
-          <div class="rc-title">New Tools, Old Rules: Closing the AI Governance and Control Gap</div>
-          <div class="rc-author">Richard Bird · Singulr AI</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- DEMO CTA -->
-<div class="demo-section">
-  <h2>See how Singulr helps you stay ahead in AI innovation</h2>
-  <p>In your personalized 30-minute demo, discover how Singulr helps you govern agentic AI at the speed of innovation.</p>
-  <div class="demo-features">
-    <div class="demo-feat">
-      <div class="demo-feat-icon">👁️</div>
-      <p><strong>Gain complete visibility</strong> across all AI agents, dependencies, MCP servers, and tool connections in your environment</p>
-    </div>
-    <div class="demo-feat">
-      <div class="demo-feat-icon">⚡</div>
-      <p><strong>Experience Singulr Pulse™</strong> intelligence that keeps you ahead of emerging AI supply chain risks</p>
-    </div>
-    <div class="demo-feat">
-      <div class="demo-feat-icon">🔍</div>
-      <p><strong>See AI Red Teaming</strong> in action as it identifies agent vulnerabilities and adversarial prompt exposure in real time</p>
-    </div>
-    <div class="demo-feat">
-      <div class="demo-feat-icon">🛡️</div>
-      <p><strong>Witness Agent Runtime Protection™</strong> blocking credential exfiltration and unauthorized tool access the instant it happens</p>
-    </div>
-  </div>
-  <div class="cta-btns">
-    <a href="https://singulr.ai/request-a-demo" class="btn-primary" style="font-size:.95rem; padding:.8em 2em;">Book Your Demo Now →</a>
-    <a href="https://docsend.com/view/t3giuqpji26h8yju" class="btn-secondary" style="font-size:.95rem; padding:.8em 2em;">Download Platform Overview →</a>
-  </div>
-</div>
-
-<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="logo">singulr AI</div>
-        <p>The Unified AI Control Plane for the agentic enterprise. Runtime governance, continuous discovery, and policy enforcement across your full AI stack.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Product</h4>
-        <a href="https://singulr.ai/products/agent-pulse">Agent Pulse</a>
-        <a href="https://singulr.ai/products/ai-control-plane">AI Control Plane</a>
-        <a href="https://singulr.ai/products/ai-risk-compliance">AI Risk &amp; Compliance</a>
-      </div>
-      <div class="footer-col">
-        <h4>Solutions</h4>
-        <a href="https://singulr.ai/solutions/ciso-security-teams">For CISO &amp; Security</a>
-        <a href="https://singulr.ai/solutions/cio-it-operations">For CIO &amp; IT</a>
-        <a href="https://singulr.ai/solutions/privacy-risk-compliance">For Privacy &amp; Risk</a>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <a href="https://singulr.ai/resources/blogs">Blog</a>
-        <a href="https://singulr.ai/resources/collateral">Collateral</a>
-        <a href="https://singulr.ai/resources/faq">FAQs</a>
-        <a href="https://singulr.ai/resources/buyers-guide">Buyer's Guide</a>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <a href="https://singulr.ai/about/company">About</a>
-        <a href="https://singulr.ai/partners">Partners</a>
-        <a href="https://singulr.ai/request-a-demo">Get Demo</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Singulr AI. All Rights Reserved</span>
-      <div style="display:flex; gap:1.2rem;">
-        <a href="https://singulr.ai/terms-and-use">Terms of Use</a>
-        <a href="https://singulr.ai/privacy-policy">Privacy Policy</a>
-      </div>
-    </div>
-  </div>
+  <p>© 2026 Singulr AI · Built by Madan Singhal</p>
 </footer>
 
-
-
-</body></html>
+</body>
+</html>
